@@ -1,6 +1,7 @@
 #ifndef COMMON_LIB_H
 #define COMMON_LIB_H
 
+#include <cmath>
 #include <so3_math.h>
 #include <Eigen/Eigen>
 #include <pcl/point_types.h>
@@ -32,6 +33,7 @@ using namespace Eigen;
 #define DEBUG_FILE_DIR(name)     (string(string(ROOT_DIR) + "Log/"+ name))
 
 typedef fast_lio::msg::Pose6D Pose6D;
+typedef pcl::PointXYZI PointTypePGO;
 typedef pcl::PointXYZINormal PointType;
 typedef pcl::PointCloud<PointType> PointCloudXYZI;
 typedef vector<PointType, Eigen::aligned_allocator<PointType>>  PointVector;
@@ -151,6 +153,15 @@ struct StatesGroup
     Matrix<double, DIM_STATE, DIM_STATE>  cov;     // states covariance
 };
 
+struct Pose6DPGO {
+  double x;
+  double y;
+  double z;
+  double roll;
+  double pitch;
+  double yaw;
+};
+
 template<typename T>
 T rad2deg(T radians)
 {
@@ -265,6 +276,16 @@ rclcpp::Time get_ros_time(double timestamp)
     auto nanosec_d = (timestamp - std::floor(timestamp)) * 1e9;
     uint32_t nanosec = nanosec_d;
     return rclcpp::Time(sec, nanosec);
+}
+
+inline double rad2deg(double radians)
+{
+  return radians * 180.0 / M_PI;
+}
+
+inline double deg2rad(double degrees)
+{
+  return degrees * M_PI / 180.0;
 }
 
 #endif
