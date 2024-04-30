@@ -1,0 +1,12 @@
+<launch>
+
+    <!-- Record for interactive slam -->
+    <include file="$(find odometry_saver)/launch/online.launch">
+        <arg name="dst_directory" value="/home/mathieu/Documents/pointcloud/interactive_slam"/>
+        <arg name="points_topic" value="/cloud_registered_lidar"/>
+        <arg name="odom_topic" value="/lio_odom"/>
+        <arg name="endpoint_frame" value="base_link"/>
+        <arg name="origin_frame" value="odom"/>
+    </include>
+    
+</launch>

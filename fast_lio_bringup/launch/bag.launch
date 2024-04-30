@@ -1,0 +1,12 @@
+<launch>
+    <!--- Foxglove bridge -->
+    <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch">
+        <arg name="send_buffer_limit" value="50000000" />
+    </include>
+
+    <!--- Fast-lio -->
+    <include file="$(find fast_lio)/launch/fast_lio_lc.launch" />
+
+    <!--- GPS to odometry -->
+    <node name="gps_to_odom" pkg="gps_control" type="gps_to_odom.py" respawn="true" output="screen"/>
+</launch>

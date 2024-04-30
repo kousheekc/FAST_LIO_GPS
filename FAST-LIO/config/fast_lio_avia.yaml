@@ -1,0 +1,66 @@
+#Config file for FAST LIO SLAM tuned for Livox Avia lidar
+
+##Fast Lio parameters
+common:
+    lid_topic: "/livox/lidar"
+    imu_topic: "/livox/imu"
+    lid_frame: "livox"
+    imu_frame: "livox"
+    base_link_frame: "base_link"
+    odom_frame: "odom"
+    
+    time_sync_en: false # ONLY turn on when external time synchronization is really not possible
+
+preprocess:
+    lidar_type: 1                # 1 for Livox serials LiDAR, 2 for Velodyne LiDAR, 3 for ouster LiDAR, 
+    scan_line: 6
+    blind: 4
+
+mapping:
+    acc_cov: 0.1
+    gyr_cov: 0.1
+    b_acc_cov: 0.0001
+    b_gyr_cov: 0.0001
+    fov_degree:    90
+    det_range:     450.0
+    extrinsic_T: [ 0.04165, 0.02326, -0.0284 ]
+    extrinsic_R: [ 1, 0, 0,
+                   0, 1, 0,
+                   0, 0, 1]
+
+
+publish:
+    scan_publish_en:  true       # 'false' will close all the point cloud output
+    dense_publish_en: true       # false will low down the points number in a global-frame point clouds scan.
+    scan_bodyframe_pub_en: true  # output the point cloud scans in IMU-body-frame
+
+
+point_filter_num: 4
+max_iteration: 4
+cube_side_length: 1000
+runtime_pos_log_enable: 0
+pcd_save_enable: $(arg save_map)
+
+# Features parameters
+feature_extract_enable: 0
+filter_size_surf: 0.5
+filter_size_map: 0.5
+
+
+## Scan Context / PGO parameters
+lidar_type:  X #no config for livox
+scan_line: 6
+minimum_range: 0.3
+
+save_directory: $(arg save_directory)
+
+mapping_skip_frame: 1 #if 1, do mapping 10 Hz, if 2, do mapping 5 Hz. Suggest to use 1, it will adjust frequence automaticlly
+mapping_line_resolution: 0.4 #A-LOAM
+mapping_plane_resolution: 0.8 #A-LOAM
+
+mapviz_filter_size: 0.05
+
+keyframe_meter_gap: 1.0 # pose assignment every k m move 
+keyframe_deg_gap: 10.0 # pose assignment every k deg rot 
+sc_dist_thres: 0.3 #SC-A-LOAM, if want no outliers, use 0.1-0.15
+sc_max_radius: 20.0 #20 - 40 for indoor, 80 for outdoor

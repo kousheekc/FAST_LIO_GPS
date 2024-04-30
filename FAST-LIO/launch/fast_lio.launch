@@ -1,0 +1,41 @@
+<!-- Launch file for FastLIO alone (just odometry) -->
+
+<launch>
+    <arg name="save_map" value="false" />
+    <!-- <arg name="save_directory" value="/Documents/PCD/LIVOX_MID360" /> -->
+    <arg name="param_file" value="$(find fast_lio)/config/fast_lio_livox_mid.yaml" />
+    <arg name="save_directory" value="$(find fast_lio)/data" />
+    <arg name="rviz" value="true" />
+    <arg name="rosbag_replay" default="false" />
+    <arg name="mapping" default="false" />
+    <arg name="start_delay_fastlio" default="10.0" /> <!-- délais de 10 s-->
+
+    <!-- Used to create the directory where files will be saved -->
+    <param name="start_time" value="$(eval eval ('_' + '_import_' + '_(\'datetime\')').datetime.now().strftime('%d_%m_%Y-%H_%M_%S'))"/> 
+    
+    <!-- FAST-LIO SLAM  -->
+    <rosparam command="load" file="$(arg param_file)" subst_value="true"/>
+
+    <node pkg="fast_lio" type="fastlio_mapping" name="laserMapping" output="screen" launch-prefix="bash -c 'sleep $(arg start_delay_fastlio); $0 $@' "/>
+
+    <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz" args="-d $(find fast_lio)/rviz_cfg/loam_livox.rviz" />
+
+    <!-- Publish gravity upright world frame -->
+    <node if="$(arg mapping)" pkg="fast_lio" name="gravity_orientation_tf" type="gravity_orientation_tf.py" output="screen">
+        <remap from="/input_imu_orientation" to="/imu/data_orientation" />
+    </node>
+    <node if="$(arg mapping)" pkg="imu_complementary_filter" name="imu_complementary_filter"
+        type="complementary_filter_node">
+        <remap from="imu/data_raw" to="/livox/imu" />
+        <remap from="imu/data" to="/imu/data_orientation" />
+    </node>
+
+    <node if="$(arg mapping)" pkg="fast_lio" name="pointcloud_accumulator" type="pointcloud_accumulator" output="screen">
+        <param name="auto_start_record" value="true"/>
+        <param name="voxel_size" value="0.05"/>
+        <remap from="/input_cloud" to="/cloud_registered_body" />
+    </node>
+
+    <include if="$(arg rosbag_replay)" file="$(find fast_lio)/launch/components/rosbag_replay.launch"/>
+
+</launch>

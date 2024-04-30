@@ -1,0 +1,60 @@
+<!-- Launch file for FastLIO + Loop closure module -->
+
+<launch>
+    <arg name="save_map" default="false" />
+    <arg name="param_file" default="$(find fast_lio)/config/fast_lio_livox_mid.yaml" />
+    <!-- <arg name="save_directory" default="$(find fast_lio)/data" /> -->
+    <arg name="save_directory" default="$(env HOME)/Documents/pointcloud/fastlio_lc_output" />
+    <arg name="rviz" default="true" />
+    <arg name="rosbag_replay" default="false" />
+
+    <!-- Used to create the directory where files will be saved -->
+    <param name="start_time" value="$(eval eval ('_' + '_import_' + '_(\'datetime\')').datetime.now().strftime('%d_%m_%Y-%H_%M_%S'))"/> 
+
+
+
+    <!-- FAST-LIO SLAM  -->
+    <rosparam command="load" file="$(arg param_file)" subst_value="true" />
+    <node pkg="fast_lio" type="fastlio_mapping" name="laserMapping" output="screen" />
+
+    <!-- Scan Context Loop closure module -->
+    <remap from="/aft_mapped_to_init" to="/lio_odom" />
+    <remap from="/velodyne_cloud_registered_local" to="/cloud_registered_body" />
+    <remap from="/cloud_for_scancontext" to="/cloud_registered_lidar" />   <!-- because ScanContext requires lidar-ego-centric coordinate for the better performance -->
+    <node pkg="aloam_velodyne" type="alaserPGO" name="alaserPGO" output="screen" />
+
+    <!-- Publish gravity upright world frame -->
+    <node pkg="fast_lio" name="gravity_orientation_tf" type="gravity_orientation_tf.py" output="screen">
+        <remap from="/input_imu_orientation" to="/imu/data_orientation" />
+    </node>
+    <node pkg="imu_complementary_filter" name="imu_complementary_filter"
+        type="complementary_filter_node">
+        <remap from="imu/data_raw" to="/livox/imu" />
+        <remap from="imu/data" to="/imu/data_orientation" />
+    </node>
+
+    <!-- Pointcloud saver -->
+    <!-- <node pkg="fast_lio" name="pointcloud_accumulator" type="pointcloud_accumulator" output="screen">
+        <param name="auto_start_record" value="true"/>
+        <param name="voxel_size" value="0.1"/>
+        <param name="publish_rate" value="0.5"/>
+        <remap from="/input_cloud" to="/cloud_registered_body" />
+    </node> -->
+
+    <!-- Octomap server -->
+    <!-- <node pkg="octomap_server" type="octomap_server_node" name="octomap_server">
+		<param name="resolution" value="0.1" />
+		<param name="frame_id" type="string" value="world" />
+		<param name="base_frame_id" type="string" value="base_link" />
+	
+		<remap from="cloud_in" to="/cloud_registered_body" />
+	</node> -->
+
+    <include if="$(arg rosbag_replay)" file="$(find fast_lio)/launch/components/rosbag_replay.launch"/>
+
+    <!-- <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"
+        args="-d $(find fast_lio)/rviz_cfg/loam_livox.rviz" /> -->
+    <node if="$(arg rviz)" name="rviz_sc" pkg="rviz" type="rviz"
+        args="-d $(find aloam_velodyne)/rviz_cfg/aloam_velodyne.rviz" />
+
+</launch>

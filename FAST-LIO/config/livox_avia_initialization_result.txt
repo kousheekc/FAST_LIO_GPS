@@ -1,0 +1,32 @@
+Done on LIVOX Avia with internal IMU
+
+Initialization result:
+Rotation LiDAR to IMU (degree)     = -1.213516 -0.866419  1.145537
+Translation LiDAR to IMU (meter)   = -0.181891  0.028244 -0.050158
+Time Lag IMU to LiDAR (second)     = -0.013248
+Bias of Gyroscope  (rad/s)         =  0.005138 -0.000490  0.004933
+Bias of Accelerometer (meters/s^2) = 0.009645 0.010404 0.009936
+Gravity in World Frame(meters/s^2) =  0.040913  0.357031 -9.803415
+
+Homogeneous Transformation Matrix from LiDAR to IMU: 
+ 0.999686 -0.019666 -0.015537 -0.181891
+ 0.019988  0.999582  0.020870  0.028244
+ 0.015120 -0.021174  0.999661 -0.050158
+ 0.000000  0.000000  0.000000  1.000000
+
+
+Refinement result:
+Rotation LiDAR to IMU (degree)     = -0.832104 -0.604216  1.796275
+Translation LiDAR to IMU (meter)   = -0.194794 -0.023262 -0.032708
+Time Lag IMU to LiDAR (second)     = -0.013248
+Bias of Gyroscope  (rad/s)         = 0.001090 0.000594 0.000205
+Bias of Accelerometer (meters/s^2) =  0.011800  0.009579 -0.000904
+Gravity in World Frame(meters/s^2) =  0.045975  0.360902 -9.795204
+
+Homogeneous Transformation Matrix from LiDAR to IMU: 
+ 0.999453 -0.031187 -0.010993 -0.194794
+ 0.031342  0.999408  0.014184 -0.023262
+ 0.010545 -0.014521  0.999839 -0.032708
+ 0.000000  0.000000  0.000000  1.000000
+
+

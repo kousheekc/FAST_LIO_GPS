@@ -1,0 +1,12 @@
+<launch>
+    <!-- Replay a rosbag with ouster points and imu data -->
+    <node pkg="rosbag" type="play" name="replay" output="log"
+        args="/home/mathieu/Documents/rosbag/rotating_ouster_long.bag" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="lidar2base_publisher"
+        args="0 0 0 0 0 0 base_link os_sensor" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="lidar2base_publisher1"
+        args="0 0 0 0 0 0 os_sensor os_lidar" />
+    <node pkg="tf2_ros" type="static_transform_publisher" name="lidar2base_publisher2"
+        args="0 0 0 0 0 0 os_sensor os_imu" />
+
+</launch>

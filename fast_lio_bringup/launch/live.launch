@@ -1,0 +1,16 @@
+<launch>
+    <!--- Fast-lio -->
+    <include file="$(find fast_lio)/launch/fast_lio_lc.launch" />
+
+    <!--- Livox -->
+    <include file="$(find livox_ros_driver2)/launch_ROS1/msg_MID360.launch" />
+
+    <!--- GPS to odometry -->
+    <node name="gps_to_odom" pkg="gps_control" type="gps_to_odom.py" respawn="true" output="screen"/>
+
+    <!--- MAVROS -->
+    <include file="$(find mavros)/launch/px4.launch" />
+
+    <!--- Foxglove bridge -->
+    <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch" />
+</launch>

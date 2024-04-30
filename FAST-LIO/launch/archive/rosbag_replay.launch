@@ -1,0 +1,17 @@
+<launch>
+    <rosparam param="use_sim_time">true</rosparam>
+    <arg name="bag_file" default="/media/mathieu/RED_SSD/rosbags/scout_rima_large_mapping_2022-09-13-11-16-57.bag"/>
+
+    <node pkg="rosbag" type="play" name="play" output="screen" args="$(arg bag_file) --clock -r 2 -s 600">
+    </node>
+
+    <include file="$(find fast_lio)/launch/fast_lio.launch">
+        <arg name="save_map" value="false"/>
+        <arg name="save_directory" default="$(find fast_lio)/data"/>
+        <arg name="param_file" value="$(find fast_lio)/config/fast_lio_ouster.yaml"/>
+    </include>
+
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find fast_lio)/rviz_cfg/loam_livox.rviz" />
+
+    <node name="rviz_sc" pkg="rviz" type="rviz" args="-d $(find aloam_velodyne)/rviz_cfg/aloam_velodyne.rviz" />
+</launch>
