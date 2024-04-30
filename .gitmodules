@@ -2,3 +2,7 @@
 	path = include/ikd-Tree
 	url = https://github.com/hku-mars/ikd-Tree.git
 	branch = fast_lio
+[submodule "livox_ros_driver2"]
+	path = livox_ros_driver2
+	url = https://github.com/kousheekc/livox_ros_driver2.git
+	branch = ROS1
